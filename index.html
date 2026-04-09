@@ -923,16 +923,19 @@
   var popupTimerInterval = null;
 
   function startPopupTimer() {
+    clearInterval(popupTimerInterval);
+    var mEl = document.getElementById('popup-timer-min');
+    var sEl = document.getElementById('popup-timer-sec');
+    if (mEl) mEl.textContent = '05';
+    if (sEl) sEl.textContent = '00';
     var end = Date.now() + 5 * 60 * 1000;
     popupTimerInterval = setInterval(function() {
       var rem = Math.max(0, Math.floor((end - Date.now()) / 1000));
       var m = Math.floor(rem / 60);
       var s = rem % 60;
-      var mEl = document.getElementById('popup-timer-min');
-      var sEl = document.getElementById('popup-timer-sec');
       if (mEl) mEl.textContent = String(m).padStart(2, '0');
       if (sEl) sEl.textContent = String(s).padStart(2, '0');
-      if (rem <= 0) { clearInterval(popupTimerInterval); }
+      if (rem <= 0) { clearInterval(popupTimerInterval); popupTimerInterval = null; }
     }, 1000);
   }
 
