@@ -611,7 +611,8 @@
       </div>
       <div id="pitch-cta" style="text-align:center;margin-top:16px;">
         <div style="text-align: center">
-                        <a href="https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4" id="btnCtaPitch" onclick="if(window.fbq)fbq('track','AddToCart',{value:297,currency:'BRL'})" style="background: rgb(40, 167, 69); color: rgb(255, 255, 255); padding: 15px; text-decoration: none; font-size: 20px; font-family: serif; border-radius: 15px; display: block; margin: 10px auto; width: max-content;"> QUERO O ATALHO - GARANTIR OZEMPHINE </a>
+                        <a href="#" id="btnCtaPitch" payt_action="oneclick_buy" data-object="R6BXYR-LQ8BXE" style="background: rgb(40, 167, 69); color: rgb(255, 255, 255); padding: 12px; text-decoration: none; font-size: 24px; font-family: sans-serif; border-radius: 20px; display: block; margin: 10px auto; width: max-content;"> Quero Garantir! </a>
+                        <select payt_element="installment" style="display: none" data-object="R6BXYR-LQ8BXE"></select>
                         
                     </div>
         <p style="font-size:12px;color:#666;margin-top:6px;">Pagamento seguro | Garantia 90 dias | Frete incluso</p>
@@ -737,10 +738,11 @@
     <div class="cta-microcopy">&#128274; Pagamento 100% seguro | Garantia de 90 dias sem perguntas</div>
 
     <!-- BOTÃO PRINCIPAL DE COMPRA -->
-    <a href="https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4" id="btnCtaMain" class="btn-cta-main" onclick="if(window.fbq)fbq('track','AddToCart',{value:297,currency:'BRL'})">
+    <a href="#" id="btnCtaMain" payt_action="oneclick_buy" data-object="R6BXYR-LQ8BXE" class="btn-cta-main">
       ✅ SIM! QUERO O OZEMPHINE AGORA
       <span style="display:block;font-size:14px;font-weight:400;margin-top:4px;">R$297 no PIX ou 12x de R$24,75</span>
     </a>
+    <select payt_element="installment" style="display:none" data-object="R6BXYR-LQ8BXE"></select>
 
     <hr class="divider-offer">
     <p class="timer-expired-text">Quando o timer zerar, essa oferta não estará mais disponível.</p>
@@ -935,5 +937,42 @@
 // Restaurar apos testes
 </script>
 <script type="text/javascript" src="https://checkout.payt.com.br/multiple-oneclickbuyscript/RB36JZ.js"></script>
+
+<script>
+/* PAYT ONE-CLICK FALLBACK — se o SDK travar no overlay #G-l-3X por 8s, redireciona pro checkout normal */
+(function() {
+  var FALLBACK_URL = 'https://payt.site/lwCe8vD';
+  var TIMEOUT_MS = 8000;
+
+  function buildFallbackUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var base = FALLBACK_URL;
+    var utms = [];
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k) {
+      if (params.get(k)) utms.push(k + '=' + encodeURIComponent(params.get(k)));
+    });
+    return utms.length ? base + (base.indexOf('?') >= 0 ? '&' : '?') + utms.join('&') : base;
+  }
+
+  window._upsellFallbackUrl = buildFallbackUrl();
+
+  var observer = new MutationObserver(function() {
+    var overlay = document.getElementById('G-l-3X');
+    if (overlay) {
+      var timer = setTimeout(function() {
+        overlay.parentNode && overlay.parentNode.removeChild(overlay);
+        if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', {value: 297, currency: 'BRL'});
+        window.location.href = window._upsellFallbackUrl;
+      }, TIMEOUT_MS);
+      // Se o overlay sumir antes do timeout, cancela
+      var overlayObs = new MutationObserver(function(muts, obs) {
+        if (!document.getElementById('G-l-3X')) { clearTimeout(timer); obs.disconnect(); }
+      });
+      overlayObs.observe(document.body, {childList: true, subtree: true});
+    }
+  });
+  observer.observe(document.body, {childList: true, subtree: true});
+})();
+</script>
 </body>
 </html>
