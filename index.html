@@ -584,57 +584,77 @@
       .section-confirm, .section-white, .section-green, .section-offer { padding: 32px 24px; }
     }
 
-    /* ---- MOBILE FIXES ---- */
-
-    /* VSL edge-to-edge no mobile */
+    /* ---- VSL SECTION ---- */
     #vsl-section {
+      background: #000;
       margin-bottom: 0;
-      padding: 0;
     }
-    #vsl-section > p {
-      padding: 16px 16px 0;
-      margin-bottom: 8px !important;
+    .vsl-label {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: #c0392b;
+      background: #fff8f8;
+      padding: 12px 16px 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0;
     }
-    #vsl-section > div:first-of-type {
-      border-radius: 0;
-      max-width: 100% !important;
+    .vsl-player-wrap {
+      background: #000;
+      width: 100%;
+      line-height: 0;
     }
     vturb-smartplayer {
-      max-width: 100% !important;
-      width: 100% !important;
+      display: block;
+      width: 100%;
+      max-width: 100%;
     }
+
+    /* PITCH CTA — oculto até PITCH_TIME */
     #pitch-cta {
-      padding: 12px 16px 16px;
+      display: none;
+      padding: 16px;
       background: #f5f9f6;
-      border-bottom: 1px solid #d4eadb;
-    }
-
-    /* Botão pitch — mobile friendly */
-    #btnCtaPitch {
-      background: #28a745 !important;
-      color: #fff !important;
-      font-size: 18px !important;
-      font-weight: 800 !important;
-      font-family: inherit !important;
-      padding: 16px 20px !important;
-      border-radius: 12px !important;
-      display: block !important;
-      width: 100% !important;
-      max-width: 420px !important;
-      margin: 8px auto 0 !important;
+      border-bottom: 2px solid #c3dfc9;
       text-align: center;
-      box-shadow: 0 4px 14px rgba(40,167,69,0.35);
-      letter-spacing: 0.01em;
-      line-height: 1.3 !important;
     }
-    #btnCtaPitch:hover { background: #218838 !important; }
 
-    /* Botão principal — suporte a span interno (multi-linha) */
+    /* Botão pitch */
+    #btnCtaPitch {
+      display: block;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto 8px;
+      background: #28a745;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: inherit;
+      padding: 16px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1.3;
+      box-shadow: 0 4px 16px rgba(40,167,69,0.4);
+      letter-spacing: 0.01em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    #btnCtaPitch:hover { background: #218838; transform: translateY(-1px); }
+    #btnCtaPitch:active { transform: translateY(0); }
+
+    .pitch-microcopy {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 0;
+    }
+
+    /* Botão principal — multi-linha com span */
     .btn-cta-main {
-      height: auto !important;
-      line-height: 1.3 !important;
-      padding: 16px 20px !important;
-      display: flex !important;
+      height: auto;
+      line-height: 1.3;
+      padding: 16px 20px;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -642,7 +662,7 @@
     }
     .btn-cta-main span {
       line-height: 1.3;
-      opacity: 0.9;
+      opacity: 0.88;
     }
 
     /* Timer responsivo */
@@ -652,14 +672,14 @@
       .headline-main { font-size: 21px; }
       .offer-headline { font-size: 19px; }
       .price-main { font-size: 30px; }
+      .container { padding: 0 12px; }
     }
 
-    /* Evita overflow horizontal */
+    /* Overflow horizontal global */
     body { overflow-x: hidden; }
     img, iframe, video { max-width: 100%; }
 
     .content-hidden-until-pitch { display: none !important; }
-    #pitch-cta { display: none; }
     #pitch-reveal-wrapper { display: none; }
     #pitch-reveal-wrapper.visible { display: block; }
 
@@ -678,21 +698,18 @@
 <!-- URGENCY BAR -->
 <div class="urgency-bar">&#128293; ATENÇÃO: Esta oferta expira em breve — não feche essa página</div>
 
-<div id="vsl-section" style="margin-bottom:20px;">
-      <p style="text-align:center;font-size:18px;font-weight:800;color:#c0392b;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">⚠️ ATENÇÃO: PARA FINALIZAR, ASSISTA ESSE VÍDEO URGENTE!</p>
-      <div style="background:#000;border-radius:12px;overflow:hidden;max-width:480px;margin:0 auto;">
-        <vturb-smartplayer id="vid-69d45b6949922114cb889f34" style="display:block;margin:0 auto;width:100%;max-width:400px;"></vturb-smartplayer>
-        <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/eb5d1182-fb3f-4ffa-9251-c708c2b5933b/players/69d45b6949922114cb889f34/v4/player.js",s.async=!0,document.head.appendChild(s);</script>
-      </div>
-      <div id="pitch-cta" style="text-align:center;margin-top:16px;">
-        <div style="text-align: center">
-                        <a href="#" id="btnCtaPitch" payt_action="oneclick_buy" data-object="R6BXYR-LQ8BXE" style="background: rgb(40, 167, 69); color: rgb(255, 255, 255); padding: 12px; text-decoration: none; font-size: 24px; font-family: sans-serif; border-radius: 20px; display: block; margin: 10px auto; width: max-content;"> Quero Garantir! </a>
-                        <select payt_element="installment" style="display: none" data-object="R6BXYR-LQ8BXE"></select>
-                        
-                    </div>
-        <p style="font-size:12px;color:#666;margin-top:6px;">Pagamento seguro | Garantia 90 dias | Frete incluso</p>
-      </div>
-    </div>
+<div id="vsl-section">
+  <p class="vsl-label">⚠️ ATENÇÃO: PARA FINALIZAR, ASSISTA ESSE VÍDEO URGENTE!</p>
+  <div class="vsl-player-wrap">
+    <vturb-smartplayer id="vid-69d45b6949922114cb889f34"></vturb-smartplayer>
+    <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/eb5d1182-fb3f-4ffa-9251-c708c2b5933b/players/69d45b6949922114cb889f34/v4/player.js",s.async=!0,document.head.appendChild(s);</script>
+  </div>
+  <div id="pitch-cta">
+    <a href="#" id="btnCtaPitch" payt_action="oneclick_buy" data-object="R6BXYR-LQ8BXE">✅ Quero Garantir o Ozemphine Agora!</a>
+    <select payt_element="installment" style="display:none" data-object="R6BXYR-LQ8BXE"></select>
+    <p class="pitch-microcopy">Pagamento seguro · Garantia 90 dias · Frete incluso</p>
+  </div>
+</div>
     <!-- BLOCO 1 ABERTURA -->
 <section class="section-confirm">
   <div class="container">
