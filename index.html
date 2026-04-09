@@ -924,4 +924,74 @@
 </script>
 <script type="text/javascript" src="js/RB36JZ.js"></script>
 
+<script>
+/* ── Payt one-click fallback ──────────────────────────────────────────────
+   O SDK do Payt cria uma overlay #G-l-3X ao clicar no botão de compra.
+   Se a chamada de API falhar (order_id ausente, sessão expirada, erro de rede)
+   a overlay fica presa indefinidamente.
+   Este script detecta a overlay e, após 8 s sem resolução, remove-a e
+   redireciona para o checkout direto preservando os UTMs.
+─────────────────────────────────────────────────────────────────────────── */
+(function () {
+  var FALLBACK_URL = 'https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4';
+  var TIMEOUT_MS   = 8000;
+  var fallbackTimer = null;
+
+  function buildFallbackUrl() {
+    var params   = new URLSearchParams(window.location.search);
+    var utmKeys  = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    var extras   = utmKeys
+      .filter(function (k) { return params.has(k); })
+      .map(function (k) { return k + '=' + encodeURIComponent(params.get(k)); })
+      .join('&');
+    return extras ? FALLBACK_URL + '?' + extras : FALLBACK_URL;
+  }
+
+  function onLoadingAppeared() {
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(function () {
+      var overlay = document.getElementById('G-l-3X');
+      if (!overlay) return; // SDK removeu sozinho → one-click funcionou
+      overlay.remove();
+      // Pixel: registrar tentativa de compra antes de redirecionar
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', { value: 297, currency: 'BRL' });
+      }
+      window.location.href = buildFallbackUrl();
+    }, TIMEOUT_MS);
+  }
+
+  // MutationObserver: escuta a inserção da overlay pelo SDK
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      var nodes = mutations[i].addedNodes;
+      for (var j = 0; j < nodes.length; j++) {
+        if (nodes[j].id === 'G-l-3X') {
+          onLoadingAppeared();
+          return;
+        }
+      }
+    }
+  });
+
+  // Também cobre o caso de one-click removida com sucesso → cancela timer
+  var successObserver = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      var nodes = mutations[i].removedNodes;
+      for (var j = 0; j < nodes.length; j++) {
+        if (nodes[j].id === 'G-l-3X') {
+          clearTimeout(fallbackTimer); // SDK resolveu → não redirecionar
+          return;
+        }
+      }
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    observer.observe(document.body, { childList: true, subtree: true });
+    successObserver.observe(document.body, { childList: true, subtree: true });
+  });
+})();
+</script>
+
 </body></html>
