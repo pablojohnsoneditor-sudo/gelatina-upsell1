@@ -874,12 +874,31 @@
   }
   window.handleSkip = handleSkip;
 
+  /* EXIT INTENT — só ativa após 15s na página */
+  var exitIntentEnabled = false;
+  setTimeout(function() { exitIntentEnabled = true; }, 15000);
+
   /* EXIT INTENT DESKTOP */
   document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 0) {
+    if (exitIntentEnabled && e.clientY <= 0) {
       showExitPopup();
     }
   });
+
+  /* EXIT INTENT MOBILE — scroll brusco pra cima após ter descido a página */
+  (function() {
+    var lastScrollY = 0;
+    var maxScrollY = 0;
+    window.addEventListener('scroll', function() {
+      var y = window.scrollY;
+      if (y > maxScrollY) maxScrollY = y;
+      // Scroll rápido pra cima (>200px) após ter descido >300px
+      if (exitIntentEnabled && maxScrollY > 300 && lastScrollY - y > 200) {
+        showExitPopup();
+      }
+      lastScrollY = y;
+    }, {passive: true});
+  })();
 
   /* PIXEL EVENTS */
   function trackUpsellClick() {
