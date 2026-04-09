@@ -609,8 +609,8 @@
       </div>
       <div id="pitch-cta" style="text-align: center; margin-top: 16px; display: block;">
         <div style="text-align: center">
-                        <a href="#" payt_action="oneclick_buy" data-object="4ONKZL-RV6NMJ" style="background: rgb(40, 167, 69); color: rgb(255, 255, 255); padding: 15px; text-decoration: none; font-size: 20px; font-family: serif; border-radius: 15px; display: block; margin: 10px auto; width: max-content;"> QUERO O ATALHO - GARANTIR OZEMPHINE </a>
-                        <select payt_element="installment" data-object="4ONKZL-RV6NMJ"></select>
+                        <a href="https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4" id="btnCtaPitch" onclick="if(window.fbq)fbq('track','AddToCart',{value:297,currency:'BRL'})" style="background: rgb(40, 167, 69); color: rgb(255, 255, 255); padding: 15px; text-decoration: none; font-size: 20px; font-family: serif; border-radius: 15px; display: block; margin: 10px auto; width: max-content;"> QUERO O ATALHO - GARANTIR OZEMPHINE </a>
+                        
                     </div>
         <p style="font-size:12px;color:#666;margin-top:6px;">Pagamento seguro | Garantia 90 dias | Frete incluso</p>
       </div>
@@ -736,11 +736,11 @@
     <div class="cta-microcopy">🔒 Pagamento 100% seguro | Garantia de 90 dias sem perguntas</div>
 
     <!-- BOTÃO PRINCIPAL DE COMPRA -->
-    <a href="#" id="btnCtaMain" payt_action="oneclick_buy" data-object="4ONKZL-RV6NMJ" class="btn-cta-main">
+    <a href="https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4" id="btnCtaMain" class="btn-cta-main" onclick="if(window.fbq)fbq('track','AddToCart',{value:297,currency:'BRL'})">
       ✅ SIM! QUERO O OZEMPHINE AGORA
       <span style="display:block;font-size:14px;font-weight:400;margin-top:4px;">R$297 no PIX ou 12x de R$24,75</span>
     </a>
-    <select payt_element="installment" data-object="4ONKZL-RV6NMJ" style="margin:0 auto 8px;display:block;"></select>
+    
 
     <hr class="divider-offer">
     <p class="timer-expired-text">Quando o timer zerar, essa oferta não estará mais disponível.</p>
@@ -1004,4 +1004,20 @@
 })();
 </script>
 
+
+<script>
+/* Inject UTMs into checkout buttons */
+(function() {
+  var CHECKOUT = 'https://checkout.payt.com.br/3cc79ca7b86157a6526ef38abf57fbb4';
+  var params = new URLSearchParams(window.location.search);
+  var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+  var extras = utmKeys.filter(function(k){ return params.has(k); })
+    .map(function(k){ return k+'='+encodeURIComponent(params.get(k)); }).join('&');
+  var url = extras ? CHECKOUT + '?' + extras : CHECKOUT;
+  ['btnCtaPitch','btnCtaMain'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.href = url;
+  });
+})();
+</script>
 </body></html>
