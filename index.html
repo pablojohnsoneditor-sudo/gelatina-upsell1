@@ -954,6 +954,7 @@
   function showExitPopup() {
     var overlay = document.getElementById('exitPopupOverlay');
     if (overlay && !overlay.classList.contains('active')) {
+      trackEvt('exit_popup_shown', {label: 'popup_shown', fbq_event: 'ExitPopupShown'});
       overlay.classList.add('active');
       startPopupTimer();
     }
@@ -969,6 +970,7 @@
 
   /* POPUP REJECT -> REDIRECIONA PRA DOWNSELL PAGE */
   function handlePopupReject() {
+    trackEvt('upsell_popup_reject', {label: 'popup_reject', fbq_event: 'UpsellPopupReject'});
     closePopup();
     window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search + window.location.search;
   }
@@ -976,6 +978,7 @@
 
   /* SKIP BUTTON */
   function handleSkip() {
+    trackEvt('upsell_skip', {label: 'skip', fbq_event: 'UpsellSkip'});
     window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search + window.location.search;
   }
   window.handleSkip = handleSkip;
@@ -987,6 +990,7 @@
   /* EXIT INTENT DESKTOP */
   document.addEventListener('mouseleave', function(e) {
     if (exitIntentEnabled && e.clientY <= 0) {
+      trackEvt('exit_intent', {source: 'desktop_mouseleave', label: 'desktop', fbq_event: 'ExitIntent'});
       showExitPopup();
     }
   });
@@ -1000,6 +1004,7 @@
       if (y > maxScrollY) maxScrollY = y;
       // Scroll rápido pra cima (>200px) após ter descido >300px
       if (exitIntentEnabled && maxScrollY > 300 && lastScrollY - y > 200) {
+        trackEvt('exit_intent', {source: 'mobile_scroll_up', label: 'mobile', fbq_event: 'ExitIntent'});
         showExitPopup();
       }
       lastScrollY = y;
@@ -1022,6 +1027,44 @@
   window.trackUpsellClick = trackUpsellClick;
   window.trackCouponClick = trackCouponClick;
   window.trackDownsellClick = trackDownsellClick;
+
+  /* SMART TRACKING — scroll depth, time milestones, skip/reject, exit intent */
+  function trackEvt(name, params) {
+    if (typeof window.clarity === 'function') {
+      window.clarity('set', name, params && params.label ? params.label : 'yes');
+    }
+    if (typeof gtag !== 'undefined') {
+      gtag('event', name, Object.assign({event_category: 'upsell_ozemphine'}, params || {}));
+    }
+    if (typeof fbq !== 'undefined' && params && params.fbq_event) {
+      fbq('trackCustom', params.fbq_event, params);
+    }
+  }
+
+  // Scroll depth: 25/50/75/100%
+  (function() {
+    var depths = {};
+    window.addEventListener('scroll', function() {
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total <= 0) return;
+      var pct = Math.round((window.scrollY / total) * 100);
+      [25, 50, 75, 100].forEach(function(d) {
+        if (!depths[d] && pct >= d) {
+          depths[d] = true;
+          trackEvt('scroll_depth_' + d, {profundidade: d, fbq_event: 'ScrollDepth'});
+        }
+      });
+    }, {passive: true});
+  })();
+
+  // Time milestones: 30s/60s/120s/180s/300s
+  (function() {
+    [30, 60, 120, 180, 300].forEach(function(sec) {
+      setTimeout(function() {
+        trackEvt('tempo_' + sec + 's', {segundos: sec, label: sec + 's', fbq_event: 'TimeMilestone'});
+      }, sec * 1000);
+    });
+  })();
 
   /* EVENT LISTENERS - substituem onclick inline (sanitizado pelo WordPress REST API) */
   document.addEventListener('DOMContentLoaded', function() {
@@ -1053,6 +1096,9 @@
   function revealPitch() {
     if (revealed) return;
     revealed = true;
+    if (typeof window.clarity === 'function') window.clarity('set', 'pitch_revealed', 'yes');
+    if (typeof gtag !== 'undefined') gtag('event', 'pitch_revealed', {event_category: 'upsell_ozemphine'});
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'PitchRevealed');
     var pitchCta = document.getElementById('pitch-cta');
     if (pitchCta) pitchCta.style.display = 'block';
     var wrapper = document.getElementById('pitch-reveal-wrapper');
