@@ -1011,17 +1011,25 @@
     }, {passive: true});
   })();
 
+  /* EVENT ID para desduplicação pixel/CAPI (Opção 3) */
+  function genEventId() {
+    return 'eid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
   /* PIXEL EVENTS */
   function trackUpsellClick() {
-    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 297, currency: 'BRL'}); }
+    var eventId = genEventId();
+    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 297, currency: 'BRL'}, {eventID: eventId}); }
     if (typeof gtag !== 'undefined') { gtag('event', 'add_to_cart', {value: 297, currency: 'BRL'}); }
   }
   function trackCouponClick() {
-    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 267, currency: 'BRL'}); }
+    var eventId = genEventId();
+    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 267, currency: 'BRL'}, {eventID: eventId}); }
     if (typeof gtag !== 'undefined') { gtag('event', 'add_to_cart', {value: 267, currency: 'BRL'}); }
   }
   function trackDownsellClick() {
-    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 147, currency: 'BRL'}); }
+    var eventId = genEventId();
+    if (typeof fbq !== 'undefined') { fbq('track', 'AddToCart', {value: 147, currency: 'BRL'}, {eventID: eventId}); }
   }
 
   window.trackUpsellClick = trackUpsellClick;
