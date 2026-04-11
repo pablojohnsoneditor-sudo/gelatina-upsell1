@@ -972,14 +972,14 @@
   function handlePopupReject() {
     trackEvt('upsell_popup_reject', {label: 'popup_reject', fbq_event: 'UpsellPopupReject'});
     closePopup();
-    window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search + window.location.search;
+    window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search;
   }
   window.handlePopupReject = handlePopupReject;
 
   /* SKIP BUTTON */
   function handleSkip() {
     trackEvt('upsell_skip', {label: 'skip', fbq_event: 'UpsellSkip'});
-    window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search + window.location.search;
+    window.location.href = 'https://gelatina-downsell.pages.dev' + window.location.search;
   }
   window.handleSkip = handleSkip;
 
